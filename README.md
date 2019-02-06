@@ -9,7 +9,7 @@ Any input line is combined with all the lines typed previously, and the result i
 
 Each input line is expected to be one of the following:
 
-* list of integer or real numbers or arithmetic operations (+, -, *, /) separated by spaces; 
+* list of integer or real numbers, arithmetic operations (+, -, *, /), abs or cos functions separated by spaces; 
 * **u** command, which means _Undo_;
 * **q** command, which is used for exit.
 

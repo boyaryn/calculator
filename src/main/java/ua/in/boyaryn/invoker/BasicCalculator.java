@@ -4,8 +4,11 @@ import ua.in.boyaryn.exception.ProcessingException;
 import ua.in.boyaryn.grammar.expression.BinOpExpression;
 import ua.in.boyaryn.grammar.expression.Expression;
 import ua.in.boyaryn.grammar.expression.Number;
+import ua.in.boyaryn.grammar.expression.UnOpExpression;
 import ua.in.boyaryn.grammar.operator.ArithmeticOperation;
 import ua.in.boyaryn.grammar.operator.BinaryOperator;
+import ua.in.boyaryn.grammar.operator.TrigonometricOperation;
+import ua.in.boyaryn.grammar.operator.UnaryOperator;
 
 import java.util.EmptyStackException;
 import java.util.Stack;
@@ -27,13 +30,13 @@ public class BasicCalculator extends Processor {
                 Expression n = new Number(d);
                 expressions.push(n);
             } catch (NumberFormatException | NullPointerException nfe) {
-                BinaryOperator o = ArithmeticOperation.fromString(token);
-                if (o != null) {
+                BinaryOperator opBinary = ArithmeticOperation.fromString(token);
+                if (opBinary != null) {
                     try {
                         Expression right = expressions.pop();
                         Expression left = expressions.pop();
                         try {
-                            Expression e = new BinOpExpression(left, right, o);
+                            Expression e = new BinOpExpression(left, right, opBinary);
                             expressions.push(e);
                         } catch (ProcessingException pe) {
                             String errorResponse = String.format("%s %f / %f.", pe.getMessage(), left.evaluate(), right.evaluate());
@@ -46,9 +49,15 @@ public class BasicCalculator extends Processor {
                         notifySubscribers(errorResponse, error);
                     }
                 } else {
-                    String errorResponse = String.format("%s at position %d is neither number nor arithmetic operation.", token, i);
-                    error = true;
-                    notifySubscribers(errorResponse, error);
+                    UnaryOperator opUnary = TrigonometricOperation.fromString(token);
+                    if (opUnary != null) {
+                        Expression operand = expressions.pop();
+                        Expression e = new UnOpExpression(operand, opUnary);
+                        expressions.push(e);
+                    } else {
+                        String errorResponse = String.format("%s at position %d is neither number nor arithmetic operation.", token, i);
+                        error = true;
+                        notifySubscribers(errorResponse, error);}
                 }
             }
         }
