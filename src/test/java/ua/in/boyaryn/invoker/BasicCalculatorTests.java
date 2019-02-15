@@ -35,13 +35,13 @@ class BasicCalculatorTests {
 
     static Stream<Arguments> calcInputAndOutputProvider() {
         return Stream.of(
-                arguments(Arrays.asList("5", "8", "+"), "13.0", false),
-                arguments(Arrays.asList("5 8 +"), "13.0", false),
-                arguments(Arrays.asList("5 8 +", "13 -"), "0.0", false),
+                arguments(Arrays.asList("5", "8", "+"), "13", false),
+                arguments(Arrays.asList("5 8 +"), "13", false),
+                arguments(Arrays.asList("5 8 +", "13 -"), "0", false),
                 arguments(Arrays.asList("5", "9", "1", "-", "/"), "0.625", false),
-                arguments(Arrays.asList("5 8 + 12"), "12.0", false),
+                arguments(Arrays.asList("5 8 + 12"), "12", false),
                 arguments(Arrays.asList(" "), null, false),
-                arguments(Arrays.asList("5", "0", "/"), "Division by zero. 5.000000 / 0.000000.", true),
+                arguments(Arrays.asList("5", "0", "/"), "Division by zero. 5 / 0.", true),
                 arguments(Arrays.asList("5", "+"), "Not enough operands for operation + at position 0.", true),
                 arguments(Arrays.asList("5", "8", "%"), "% at position 0 is neither number nor arithmetic operation.", true)
         );
@@ -58,7 +58,7 @@ class BasicCalculatorTests {
 
     static Stream<Arguments> calcInputWithUndoAndOutputProvider() {
         return Stream.of(
-                arguments(Arrays.asList("5", "8", "+"), "8.0", false),
+                arguments(Arrays.asList("5", "8", "+"), "8", false),
                 arguments(Arrays.asList("5"), "", false),
                 arguments(Arrays.asList(), "Nothing to undo.", true)
         );

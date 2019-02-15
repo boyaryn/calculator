@@ -5,11 +5,9 @@ import ua.in.boyaryn.grammar.expression.BinOpExpression;
 import ua.in.boyaryn.grammar.expression.Expression;
 import ua.in.boyaryn.grammar.expression.Number;
 import ua.in.boyaryn.grammar.expression.UnOpExpression;
-import ua.in.boyaryn.grammar.operator.ArithmeticOperation;
-import ua.in.boyaryn.grammar.operator.BinaryOperator;
-import ua.in.boyaryn.grammar.operator.TrigonometricOperation;
-import ua.in.boyaryn.grammar.operator.UnaryOperator;
+import ua.in.boyaryn.grammar.operator.*;
 
+import java.math.BigDecimal;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
@@ -26,7 +24,7 @@ public class BasicCalculator extends Processor {
         for (int i=0; i<tokens.length && !error; i++) {
             String token = tokens[i];
             try {
-                double d = Double.parseDouble(token);
+                BigDecimal d = new BigDecimal(token);
                 Expression n = new Number(d);
                 expressions.push(n);
             } catch (NumberFormatException | NullPointerException nfe) {
@@ -39,7 +37,7 @@ public class BasicCalculator extends Processor {
                             Expression e = new BinOpExpression(left, right, opBinary);
                             expressions.push(e);
                         } catch (ProcessingException pe) {
-                            String errorResponse = String.format("%s %f / %f.", pe.getMessage(), left.evaluate(), right.evaluate());
+                            String errorResponse = String.format("%s %s / %s.", pe.getMessage(), left.evaluate().toString(), right.evaluate().toString());
                             error = true;
                             notifySubscribers(errorResponse, error);
                         }
@@ -55,9 +53,17 @@ public class BasicCalculator extends Processor {
                         Expression e = new UnOpExpression(operand, opUnary);
                         expressions.push(e);
                     } else {
-                        String errorResponse = String.format("%s at position %d is neither number nor arithmetic operation.", token, i);
-                        error = true;
-                        notifySubscribers(errorResponse, error);}
+                        opUnary = GeneralMathOperation.fromString(token);
+                        if (opUnary != null) {
+                            Expression operand = expressions.pop();
+                            Expression e = new UnOpExpression(operand, opUnary);
+                            expressions.push(e);
+                        } else {
+                            String errorResponse = String.format("%s at position %d is neither number nor arithmetic operation.", token, i);
+                            error = true;
+                            notifySubscribers(errorResponse, error);
+                        }
+                    }
                 }
             }
         }
@@ -65,7 +71,8 @@ public class BasicCalculator extends Processor {
         if (!error && !expressions.empty()) {
             history.push(expressions);
             if (!expressions.empty()) {
-                notifySubscribers(Double.toString(expressions.peek().evaluate()), error);
+                BigDecimal value = expressions.peek().evaluate();
+                notifySubscribers(value.toString(), error);
             }
         }
     }
@@ -73,7 +80,7 @@ public class BasicCalculator extends Processor {
     public void undo() {
         if (!history.empty()) {
             history.pop();
-            String output = history.empty() ? "" : Double.toString(history.peek().peek().evaluate());
+            String output = history.empty() ? "" : history.peek().peek().evaluate().toString();
             notifySubscribers(output, false);
         } else {
             String errorResponse = "Nothing to undo.";

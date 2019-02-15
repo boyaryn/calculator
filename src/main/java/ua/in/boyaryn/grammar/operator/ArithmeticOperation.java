@@ -1,29 +1,31 @@
 package ua.in.boyaryn.grammar.operator;
 
+import java.math.BigDecimal;
+
 public enum ArithmeticOperation implements BinaryOperator {
 
     SUM("+") {
         @Override
-        public double action(double left, double right) {
-            return left + right;
+        public BigDecimal action(BigDecimal left, BigDecimal right) {
+            return left.add(right);
         }
     },
     SUBTRACT("-") {
         @Override
-        public double action(double left, double right) {
-            return left - right;
+        public BigDecimal action(BigDecimal left, BigDecimal right) {
+            return left.subtract(right);
         }
     },
     MULTIPLY("*") {
         @Override
-        public double action(double left, double right) {
-            return left * right;
+        public BigDecimal action(BigDecimal left, BigDecimal right) {
+            return left.multiply(right);
         }
     },
     DIVIDE("/") {
         @Override
-        public double action(double left, double right) {
-            return left / right;
+        public BigDecimal action(BigDecimal left, BigDecimal right) {
+            return left.divide(right);
         }
     };
 

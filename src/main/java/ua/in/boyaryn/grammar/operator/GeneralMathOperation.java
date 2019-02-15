@@ -1,11 +1,13 @@
 package ua.in.boyaryn.grammar.operator;
 
+import java.math.BigDecimal;
+
 public enum GeneralMathOperation implements UnaryOperator {
 
     ABS("abs") {
         @Override
-        public double action(double operand) {
-            return Math.abs(operand);
+        public BigDecimal action(BigDecimal operand) {
+            return operand.abs();
         }
     };
 

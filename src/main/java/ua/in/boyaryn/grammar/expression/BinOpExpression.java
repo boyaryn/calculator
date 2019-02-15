@@ -4,12 +4,14 @@ import ua.in.boyaryn.exception.ProcessingException;
 import ua.in.boyaryn.grammar.operator.ArithmeticOperation;
 import ua.in.boyaryn.grammar.operator.BinaryOperator;
 
+import java.math.BigDecimal;
+
 public class BinOpExpression implements Expression {
 
-    private final double value;
+    private final BigDecimal value;
 
     public BinOpExpression(Expression left, Expression right, BinaryOperator operator) throws ProcessingException {
-        if (right.evaluate() != 0 || operator != ArithmeticOperation.DIVIDE) {
+        if (!right.evaluate().equals(BigDecimal.ZERO) || operator != ArithmeticOperation.DIVIDE) {
             this.value = operator.action(left.evaluate(), right.evaluate());
         } else {
             throw new ProcessingException("Division by zero.");
@@ -17,7 +19,7 @@ public class BinOpExpression implements Expression {
     }
 
     @Override
-    public double evaluate() {
+    public BigDecimal evaluate() {
         return value;
     }
 }

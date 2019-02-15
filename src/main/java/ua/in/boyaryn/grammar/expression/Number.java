@@ -1,15 +1,17 @@
 package ua.in.boyaryn.grammar.expression;
 
+import java.math.BigDecimal;
+
 public class Number implements Expression {
 
-    private final double number;
+    private final BigDecimal number;
 
-    public Number(double number) {
+    public Number(BigDecimal number) {
         this.number = number;
     }
 
     @Override
-    public double evaluate() {
+    public BigDecimal evaluate() {
         return number;
     }
 }

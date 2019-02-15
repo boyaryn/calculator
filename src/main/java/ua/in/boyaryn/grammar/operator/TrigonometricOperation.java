@@ -1,11 +1,13 @@
 package ua.in.boyaryn.grammar.operator;
 
+import java.math.BigDecimal;
+
 public enum  TrigonometricOperation implements UnaryOperator {
 
     COS("cos") {
         @Override
-        public double action(double operand) {
-            return Math.cos(operand);
+        public BigDecimal action(BigDecimal operand) {
+            return new BigDecimal(Math.cos(operand.doubleValue()));
         }
     };
 

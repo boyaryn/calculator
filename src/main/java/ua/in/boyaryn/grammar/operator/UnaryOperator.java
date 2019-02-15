@@ -1,5 +1,7 @@
 package ua.in.boyaryn.grammar.operator;
 
+import java.math.BigDecimal;
+
 public interface UnaryOperator extends Operator {
-    double action(double operand);
+    BigDecimal action(BigDecimal operand);
 }

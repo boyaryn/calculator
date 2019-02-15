@@ -1,5 +1,7 @@
 package ua.in.boyaryn.grammar.expression;
 
+import java.math.BigDecimal;
+
 public interface Expression {
-    double evaluate();
+    BigDecimal evaluate();
 }
